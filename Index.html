@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Account Creator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary: #ffca28;
+            --primary-hover: #ffb300;
+            --secondary: #f57c00;
+            --success: #4caf50;
+            --error: #f44336;
+            --border: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background-color: #2c2c2c;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        select option {
+            padding: 8px;
+            font-size: 15px;
+        }
+
+        .option-nu { background: #7b1fa2; color: white; }
+        .option-in { background: #0d47a1; color: white; }
+        .option-braip { background: #ff6f00; color: white; }
+        .option-utmify { background: #1b5e20; color: white; }
+        .option-logzz { background: #e65100; color: white; }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-download {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            width: auto;
+            padding: 10px 16px;
+            flex: 1;
+            min-width: 110px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .btn-download.braip {
+            border-color: #ffca28;
+            color: #ffca28;
+        }
+
+        .btn-download.utmify {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .btn-download.logzz {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .console {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-radius: 6px;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .log-success { color: #4caf50; }
+        .log-error { color: #f44336; }
+        .log-info { color: #2196f3; }
+        .log-warning { color: #ffca28; }
+        .log-braip { color: #ff6f00; font-weight: bold; }
+        .log-utmify { color: #4caf50; font-weight: bold; }
+        .log-logzz { color: #ff9800; font-weight: bold; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-nu { background: #7b1fa2; color: white; }
+        .badge-in { background: #0d47a1; color: white; }
+        .badge-braip { background: #ff6f00; color: white; }
+        .badge-utmify { background: #1b5e20; color: white; }
+        .badge-logzz { background: #e65100; color: white; }
+
+        .projeto-info {
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+            padding: 8px 12px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .projeto-info code {
+            background: #1a1a1a;
+            padding: 1px 6px;
+            border-radius: 3px;
+            color: #ddd;
+            font-size: 12px;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🔥 Firebase Account Creator</h1>
+        <p class="subtitle">Gerador de Contas - Múltiplos Projetos</p>
+        <div class="badge-list">
+            <span class="badge badge-nu">📦 NU</span>
+            <span class="badge badge-in">📦 IN</span>
+            <span class="badge badge-braip">🔥 BRAIP</span>
+            <span class="badge badge-utmify">🌿 UTMIFY</span>
+            <span class="badge badge-logzz">📊 LOGZZ</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="projeto">🎯 Selecione o Projeto Firebase:</label>
+            <select id="projeto">
+                <option value="NU">📦  NU</option>
+                <option value="IN">📦  IN</option>
+                <option value="BRAIP">🔥  BRAIP</option>
+                <option value="UTMIFY">🌿  UTMIFY</option>
+                <option value="LOGZZ">📊  LOGZZ</option>
+            </select>
+            <div class="projeto-info" id="projetoInfo">Selecione um projeto para ver os detalhes</div>
+        </div>
+
+        <div class="form-group">
+            <label for="nomeBase">✏️ Nome Base (ex: joao):</label>
+            <input type="text" id="nomeBase" placeholder="Digite o nome base..." autocomplete="off">
+        </div>
+
+        <button id="btnCriar" onclick="iniciarCriacao()">🚀 Criar Conta</button>
+        
+        <div class="button-group">
+            <button class="btn-download" onclick="baixarArquivo('NU')">📦 NU</button>
+            <button class="btn-download" onclick="baixarArquivo('IN')">📦 IN</button>
+            <button class="btn-download braip" onclick="baixarArquivo('BRAIP')">🔥 BRAIP</button>
+            <button class="btn-download utmify" onclick="baixarArquivo('UTMIFY')">🌿 UTMIFY</button>
+            <button class="btn-download logzz" onclick="baixarArquivo('LOGZZ')">📊 LOGZZ</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <label>📟 Console de Execução:</label>
+        <div class="console" id="consoleOutput">
+            <span class="log-info">✅ Pronto para iniciar...</span><br>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // CONFIGURAÇÕES FIREBASE - ATUALIZADO COM LOGZZ
+    // ============================================================
+    const FIREBASE = {
+        "NU": { 
+            "api_key": "AIzaSyDyIDOm4LkVYGzd7dghGhOzswxhrCj6cO4",
+            "project_id": "nu-project",
+            "label": "NU",
+            "emoji": "📦",
+            "color": "badge-nu",
+            "logClass": "aviso"
+        },
+        "IN": { 
+            "api_key": "AIzaSyBLEVfk2WoYa6vG5rKT53zQkTt8G7xBxSo",
+            "project_id": "in-project",
+            "label": "IN",
+            "emoji": "📦",
+            "color": "badge-in",
+            "logClass": "aviso"
+        },
+        "BRAIP": { 
+            "api_key": "AIzaSyCFI0_WjOcw3raYsFO3yMKagjzcuzixkjY",
+            "project_id": "braip-7a15d",
+            "sender_id": "761832540641",
+            "storage_bucket": "braip-7a15d.appspot.com",
+            "label": "BRAIP",
+            "emoji": "🔥",
+            "color": "badge-braip",
+            "logClass": "braip"
+        },
+        "UTMIFY": { 
+            "api_key": "AIzaSyDGZQSIGDeZonGpieQVjB-rXNrKiedRwXI",
+            "project_id": "utmify-2ac14",
+            "sender_id": "69448939683",
+            "storage_bucket": "utmify-2ac14.firebasestorage.app",
+            "label": "UTMIFY",
+            "emoji": "🌿",
+            "color": "badge-utmify",
+            "logClass": "utmify"
+        },
+        "LOGZZ": { 
+            "api_key": "AIzaSyD_tea_0PMeXJ52uGbGEyptfFlH40qWc-8",
+            "project_id": "logzz-bf32a",
+            "sender_id": "104931110890",
+            "storage_bucket": "logzz-bf32a.firebasestorage.app",
+            "label": "LOGZZ",
+            "emoji": "📊",
+            "color": "badge-logzz",
+            "logClass": "logzz"
+        }
+    };
+
+    // Estrutura para armazenar as contas criadas na sessão atual
+    const contasSalvas = {
+        "NU": [],
+        "IN": [],
+        "BRAIP": [],
+        "UTMIFY": [],
+        "LOGZZ": []
+    };
+
+    // ============================================================
+    // ATUALIZAR INFORMAÇÕES DO PROJETO
+    // ============================================================
+    document.getElementById('projeto').addEventListener('change', function() {
+        const projeto = this.value;
+        const info = FIREBASE[projeto];
+        const infoDiv = document.getElementById('projetoInfo');
+        
+        let html = `${info.emoji} <strong>${projeto}</strong> &nbsp;|&nbsp; 📌 Project ID: <code>${info.project_id}</code>`;
+        if (info.sender_id) {
+            html += ` &nbsp;|&nbsp; 📨 Sender ID: <code>${info.sender_id}</code>`;
+        }
+        if (info.storage_bucket) {
+            html += ` &nbsp;|&nbsp; 📦 Storage: <code>${info.storage_bucket}</code>`;
+        }
+        infoDiv.innerHTML = html;
+        infoDiv.style.borderLeftColor = projeto === 'BRAIP' ? '#ffca28' : 
+                                        projeto === 'UTMIFY' ? '#4caf50' :
+                                        projeto === 'LOGZZ' ? '#ff9800' : '#888';
+    });
+
+    // Inicializar com o primeiro projeto
+    document.getElementById('projeto').dispatchEvent(new Event('change'));
+
+    // ============================================================
+    // GERAÇÃO DE E-MAIL
+    // ============================================================
+    function gerarEmailOfuscado(nome) {
+        const agora = new Date();
+        const numParaLetra = {
+            "0": "o", "1": "i", "2": "z", "3": "e", "4": "a",
+            "5": "s", "6": "g", "7": "t", "8": "b", "9": "p"
+        };
+
+        const dia = String(agora.getDate()).padStart(2, '0');
+        const mes = String(agora.getMonth() + 1).padStart(2, '0');
+        const ano = String(agora.getFullYear()).slice(-2);
+        const hora = String(agora.getHours()).padStart(2, '0');
+        const minuto = String(agora.getMinutes()).padStart(2, '0');
+        const segundo = String(agora.getSeconds()).padStart(2, '0');
+
+        const combinacoes = [
+            `${dia}${ano}${hora}`,
+            `${ano}${dia}${minuto}`,
+            `${ano}${mes}${dia}`,
+            `${dia}${ano}${segundo}`,
+            `${hora}${minuto}${ano}`,
+            `${ano}${agora.getMonth() + 1}${hora}`,
+            `${dia}${mes}${ano}`
+        ];
+
+        const hashBase = combinacoes[Math.floor(Math.random() * combinacoes.length)];
+        let hashFinal = "";
+
+        for (let char of hashBase) {
+            if (numParaLetra[char] && Math.random() > 0.4) {
+                hashFinal += numParaLetra[char];
+            } else {
+                hashFinal += char;
+            }
+        }
+
+        const dominios = ["@gmail.com", "@outlook.com", "@hotmail.com", "@yahoo.com", "@protonmail.com"];
+        const dominio = dominios[Math.floor(Math.random() * dominios.length)];
+
+        return `${nome}${hashFinal}${dominio}`;
+    }
+
+    // ============================================================
+    // GERAÇÃO DE SENHA
+    // ============================================================
+    function gerarSenhaOfuscada() {
+        const agora = new Date();
+        const mesesInvertidos = {
+            1: "naj", 2: "vef", 3: "ram", 4: "rba", 5: "iam", 6: "nuj",
+            7: "luj", 8: "oga", 9: "tes", 10: "tuo", 11: "von", 12: "zed"
+        };
+
+        const dia = String(agora.getDate()).padStart(2, '0');
+        const mesNum = agora.getMonth() + 1;
+        const mes = String(mesNum).padStart(2, '0');
+        const ano = String(agora.getFullYear()).slice(-2);
+        const hora = String(agora.getHours()).padStart(2, '0');
+        const minuto = String(agora.getMinutes()).padStart(2, '0');
+
+        const bases = [
+            `${ano}${mes}${dia}`,
+            `${dia}${ano}${minuto}`,
+            `${mesesInvertidos[mesNum]}${dia}`,
+            `${hora}${minuto}${ano}`,
+            `${ano}${mesesInvertidos[mesNum]}`,
+            `${dia}${ano}${mesesInvertidos[mesNum]}`
+        ];
+
+        const base = bases[Math.floor(Math.random() * bases.length)];
+        const simbolos = ["!", "@", "#", "$", "%", "&", "*", "+"];
+        const simbolo = simbolos[Math.floor(Math.random() * simbolos.length)];
+        const numero = Math.floor(Math.random() * (99 - 10 + 1)) + 10;
+
+        return `${base}${simbolo}${numero}`;
+    }
+
+    // ============================================================
+    // FUNÇÕES DE UTILIDADE
+    // ============================================================
+    function obterDataFormatada() {
+        const agora = new Date();
+        const y = agora.getFullYear();
+        const m = String(agora.getMonth() + 1).padStart(2, '0');
+        const d = String(agora.getDate()).padStart(2, '0');
+        const h = String(agora.getHours()).padStart(2, '0');
+        const min = String(agora.getMinutes()).padStart(2, '0');
+        const s = String(agora.getSeconds()).padStart(2, '0');
+        return `${y}-${m}-${d} ${h}:${min}:${s}`;
+    }
+
+    function logConsole(mensagem, tipo = 'normal') {
+        const consoleDiv = document.getElementById('consoleOutput');
+        const span = document.createElement('span');
+        
+        if(tipo === 'sucesso') span.className = 'log-success';
+        else if(tipo === 'erro') span.className = 'log-error';
+        else if(tipo === 'aviso') span.className = 'log-warning';
+        else if(tipo === 'braip') span.className = 'log-braip';
+        else if(tipo === 'utmify') span.className = 'log-utmify';
+        else if(tipo === 'logzz') span.className = 'log-logzz';
+        else if(tipo === 'info') span.className = 'log-info';
+        
+        span.innerHTML = mensagem + "<br>";
+        consoleDiv.appendChild(span);
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+
+    // ============================================================
+    // CRIAÇÃO NO FIREBASE AUTHENTICATION
+    // ============================================================
+    async function criarConta(projeto, email, senha) {
+        const apiKey = FIREBASE[projeto].api_key;
+        const signupUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`;
+
+        const payload = {
+            email: email,
+            password: senha,
+            returnSecureToken: true
+        };
+
+        try {
+            const response = await fetch(signupUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const dados = await response.json();
+
+            if (response.ok) {
+                return {
+                    sucesso: true,
+                    email: email,
+                    senha: senha,
+                    uid: dados.localId,
+                    idToken: dados.idToken,
+                    project: projeto
+                };
+            } else {
+                return {
+                    sucesso: false,
+                    email: email,
+                    erro: response.status,
+                    mensagem: dados.error ? dados.error.message : JSON.stringify(dados),
+                    project: projeto
+                };
+            }
+        } catch (error) {
+            return {
+                sucesso: false,
+                email: email,
+                erro: "REQUEST_ERROR",
+                mensagem: error.message,
+                project: projeto
+            };
+        }
+    }
+
+    // ============================================================
+    // FLUXO INTERATIVO PRINCIPAL
+    // ============================================================
+    async function iniciarCriacao() {
+        const projeto = document.getElementById('projeto').value;
+        const nomeBase = document.getElementById('nomeBase').value.trim().toLowerCase();
+        const btn = document.getElementById('btnCriar');
+
+        if (!nomeBase) {
+            logConsole("❌ Nome inválido. Digite um nome base.", "erro");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "⏳ Criando...";
+
+        const infoProjeto = FIREBASE[projeto];
+        const emoji = infoProjeto.emoji;
+        const logTipo = infoProjeto.logClass;
+
+        logConsole("<br>════════════════════════════════════════════════════════════");
+        logConsole(`${emoji}  CRIAR CONTA - FIREBASE ${projeto}  (${infoProjeto.project_id})`, logTipo);
+        logConsole("════════════════════════════════════════════════════════════");
+        
+        // Mostrar info extra
+        if (infoProjeto.sender_id) {
+            logConsole(`📨 Sender ID:  ${infoProjeto.sender_id}`, 'info');
+        }
+        if (infoProjeto.storage_bucket) {
+            logConsole(`📦 Storage:    ${infoProjeto.storage_bucket}`, 'info');
+        }
+        
+        const email = gerarEmailOfuscado(nomeBase);
+        const senha = gerarSenhaOfuscada();
+
+        logConsole(`📧 Email:      ${email}`);
+        logConsole(`🔑 Senha:      ${senha}`);
+        logConsole(`⏳ Enviando requisição para o Firebase Authentication...`);
+
+        const resultado = await criarConta(projeto, email, senha);
+
+        if (resultado.sucesso) {
+            logConsole(`✅ CONTA CRIADA COM SUCESSO!`, "sucesso");
+            logConsole(`🆔 UID:        ${resultado.uid}`, "sucesso");
+            
+            contasSalvas[projeto].push({
+                data: obterDataFormatada(),
+                projeto: projeto,
+                email: resultado.email,
+                senha: resultado.senha,
+                uid: resultado.uid
+            });
+
+            logConsole(`💾 Conta salva! Clique no botão de Baixar para exportar.`, "info");
+        } else {
+            logConsole(`❌ NÃO FOI POSSÍVEL CRIAR A CONTA`, "erro");
+            logConsole(`HTTP:        ${resultado.erro}`, "erro");
+            logConsole(`Firebase:    ${resultado.mensagem}`, "erro");
+        }
+
+        logConsole("════════════════════════════════════════════════════════════");
+        
+        btn.disabled = false;
+        btn.innerText = "🚀 Criar Conta";
+    }
+
+    // ============================================================
+    // SALVAR E BAIXAR ARQUIVO TXT
+    // ============================================================
+    function baixarArquivo(projeto) {
+        const contas = contasSalvas[projeto];
+        
+        if (contas.length === 0) {
+            alert(`⚠️ Nenhuma conta foi criada para o projeto ${projeto} nesta sessão.`);
+            return;
+        }
+
+        const info = FIREBASE[projeto];
+        const emoji = info.emoji;
+        let conteudoTxt = `╔══════════════════════════════════════════════════════════════╗\n`;
+        conteudoTxt += `║  ${emoji}  CONTAS FIREBASE - PROJETO ${projeto.padEnd(30)}\n`;
+        conteudoTxt += `╠══════════════════════════════════════════════════════════════╣\n`;
+        conteudoTxt += `║  📌 Project ID:  ${info.project_id.padEnd(40)}\n`;
+        if (info.sender_id) {
+            conteudoTxt += `║  📨 Sender ID:   ${info.sender_id.padEnd(40)}\n`;
+        }
+        if (info.storage_bucket) {
+            conteudoTxt += `║  📦 Storage:     ${info.storage_bucket.padEnd(40)}\n`;
+        }
+        conteudoTxt += `║  📅 Gerado em:   ${obterDataFormatada().padEnd(40)}\n`;
+        conteudoTxt += `║  📊 Total:       ${String(contas.length).padEnd(40)}\n`;
+        conteudoTxt += `╚══════════════════════════════════════════════════════════════╝\n\n`;
+        
+        contas.forEach((c, i) => {
+            const num = String(i+1).padStart(3, '0');
+            conteudoTxt += `[${num}] ${c.data} | Email: ${c.email} | Senha: ${c.senha} | UID: ${c.uid}\n`;
+        });
+
+        const blob = new Blob([conteudoTxt], { type: "text/plain;charset=utf-8" });
+        
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `contas_${projeto.toLowerCase()}.txt`;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        logConsole(`💾 Arquivo contas_${projeto.toLowerCase()}.txt baixado com ${contas.length} contas!`, "sucesso");
+    }
+</script>
+
+</body>
+</html>
